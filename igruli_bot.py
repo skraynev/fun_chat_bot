@@ -135,7 +135,8 @@ def join_to_game(message):
                 (
                     "Отправьте любое сообщение боту @%s. "
                     "Затем выполните /drop_me и /join команды."
-                ) % bot.get_me().username,
+                )
+                % bot.get_me().username,
             )
         else:
             bot.send_message(chat_id, "SERVER TELEGRAM ERROR: %s" % json_res)
