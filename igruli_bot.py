@@ -1,4 +1,6 @@
-import json
+import os
+
+from dotenv import load_dotenv
 import time
 import telebot
 from parse_text_reactions import find_answer_on_text_msg, on_lar_command
@@ -12,7 +14,8 @@ help_msg = (
     "- показывать желтую карточку в некоторых случаях \n"
 )
 
-bot = telebot.TeleBot('XXXXXXXXXXXX')
+load_dotenv()
+bot = telebot.TeleBot(os.environ.get('TELE_TOKEN'))
 count_lar = 0
 eki_games = {}
 admin_ids = []
