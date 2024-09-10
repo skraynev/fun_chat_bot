@@ -1,11 +1,21 @@
 import os
 import time
 
+import eki_game
 import telebot
 from dotenv import load_dotenv
-
-import eki_game
 from parse_text_reactions import find_answer_on_text_msg, on_lar_command
+from utils import validate_chats
+
+load_dotenv()
+token = os.environ.get("TELE_TOKEN")
+if not token:
+    print("TELE_TOKEN env variable should be specified")
+    exit(1)
+
+allowed_chats = set(map(int, os.environ.get("ALLOWED_CHATS", "").split(",")))
+bot = telebot.TeleBot(token)
+
 
 help_msg = (
     "Что я умею: \n"
@@ -14,8 +24,6 @@ help_msg = (
     "- показывать желтую карточку в некоторых случаях \n"
 )
 
-load_dotenv()
-bot = telebot.TeleBot(os.environ.get("TELE_TOKEN"))
 count_lar = 0
 eki_games = {}
 admin_ids = []
@@ -24,11 +32,13 @@ game_cls = eki_game.EkiGame()
 
 
 @bot.message_handler(commands=["help"])
+@validate_chats(allowed_chats)
 def help_message(message):
     bot.send_message(message.chat.id, help_msg)
 
 
 @bot.message_handler(commands=["lar"])
+@validate_chats(allowed_chats)
 def emulate_lar(message):
     global count_lar
     count_lar, answer = on_lar_command(count_lar)
@@ -78,11 +88,13 @@ help_msg = """
 
 
 @bot.message_handler(commands=["game_help"])
+@validate_chats(allowed_chats)
 def help_eki_game(message):
     bot.send_message(message.chat.id, help_msg % bot.get_me().username)
 
 
 @bot.message_handler(commands=["game"])
+@validate_chats(allowed_chats)
 def create_eki_game(message):
     if not is_admin(message):
         return
@@ -97,6 +109,7 @@ def create_eki_game(message):
 
 
 @bot.message_handler(commands=["join"])
+@validate_chats(allowed_chats)
 def join_to_game(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -143,6 +156,7 @@ def join_to_game(message):
 
 
 @bot.message_handler(commands=["drop_me"])
+@validate_chats(allowed_chats)
 def leave_game(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -154,6 +168,7 @@ def leave_game(message):
 
 
 @bot.message_handler(commands=["top"])
+@validate_chats(allowed_chats)
 def show_top(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -163,6 +178,7 @@ def show_top(message):
 
 
 @bot.message_handler(commands=["go"])
+@validate_chats(allowed_chats)
 def send_question(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -220,6 +236,7 @@ def send_question(message):
 
 
 @bot.message_handler(commands=["whoisnext"])
+@validate_chats(allowed_chats)
 def who_is_next(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -235,6 +252,7 @@ def who_is_next(message):
 
 
 @bot.message_handler(commands=["cancel"])
+@validate_chats(allowed_chats)
 def cancel_question(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -252,6 +270,7 @@ def cancel_question(message):
 
 
 @bot.message_handler(commands=["win"])
+@validate_chats(allowed_chats)
 def win_question(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -267,6 +286,7 @@ def win_question(message):
 
 
 @bot.message_handler(commands=["exit"])
+@validate_chats(allowed_chats)
 def del_eki_game(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -279,6 +299,7 @@ def del_eki_game(message):
 
 
 @bot.message_handler(commands=["add_point"])
+@validate_chats(allowed_chats)
 def add_point(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -300,6 +321,7 @@ def add_point(message):
 
 
 @bot.message_handler(commands=["remove_point"])
+@validate_chats(allowed_chats)
 def remove_point(message):
     chat_id = game_is_run(message)
     if not chat_id:
@@ -333,6 +355,7 @@ def remove_point(message):
 
 
 @bot.message_handler(content_types=["text"])
+@validate_chats(allowed_chats)
 def send_text(message):
     chat_id = message.chat.id
     msg_text = message.text.lower()
@@ -349,8 +372,8 @@ def send_text(message):
             bot.send_message(chat_id, answer)
 
 
-bot.polling()
-
+if __name__ == "__main__":
+    bot.polling()
 
 # TODO:
 # - доп задание - слова
