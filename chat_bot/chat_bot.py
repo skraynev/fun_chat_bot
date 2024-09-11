@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -7,13 +8,20 @@ from dotenv import load_dotenv
 from parse_text_reactions import find_answer_on_text_msg, on_lar_command
 from utils import validate_chats
 
+logging.basicConfig(filename="bot.log", level=logging.INFO)
+
+log = logging.getLogger(__name__)
+
 load_dotenv()
 token = os.environ.get("TELE_TOKEN")
+log.info("Get token")
 if not token:
     print("TELE_TOKEN env variable should be specified")
     exit(1)
 
+log.info("Get allowed chats")
 allowed_chats = set(map(int, os.environ.get("ALLOWED_CHATS", "").split(",")))
+
 bot = telebot.TeleBot(token)
 
 
@@ -105,7 +113,7 @@ def create_eki_game(message):
         return
     game_cls = eki_game.EkiGame()
     eki_games = {chat_id: game_cls}
-    bot.send_message(chat_id, help_msg % bot.get_me().username)
+    bot.send_message(chat_id, help_msg_game % bot.get_me().username)
 
 
 @bot.message_handler(commands=["join"])
@@ -373,7 +381,9 @@ def send_text(message):
 
 
 if __name__ == "__main__":
+    log.info("Running polling")
     bot.infinity_polling()
+    log.info("Poll is in progress")
 
 # TODO:
 # - доп задание - слова
