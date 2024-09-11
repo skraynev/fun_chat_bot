@@ -373,7 +373,7 @@ def send_text(message):
 
 
 if __name__ == "__main__":
-    bot.polling()
+    bot.infinity_polling()
 
 # TODO:
 # - доп задание - слова

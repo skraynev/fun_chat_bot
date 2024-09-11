@@ -15,3 +15,6 @@ Chat bot with some functionality:
 
 # Build image
 `make build`
+
+# Run created container
+docker run --env-file .env --rm -d --name <cont_name> skraynev/chat_bot 

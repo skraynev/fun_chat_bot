@@ -6,4 +6,4 @@ test:
 	pytest tests/*
 
 build:
-	docker build -f docker/Dockerfile -t chat_bot .
+	docker build -f docker/Dockerfile -t skraynev/chat_bot .
