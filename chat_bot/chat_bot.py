@@ -17,7 +17,7 @@ allowed_chats = set(map(int, os.environ.get("ALLOWED_CHATS", "").split(",")))
 bot = telebot.TeleBot(token)
 
 
-help_msg = (
+help_msg_main = (
     "Что я умею: \n"
     "- supported commands: /help, /lar \n"
     "- реагировать на сообщения с опреленными словами \n"
@@ -34,7 +34,7 @@ game_cls = eki_game.EkiGame()
 @bot.message_handler(commands=["help"])
 @validate_chats(allowed_chats)
 def help_message(message):
-    bot.send_message(message.chat.id, help_msg)
+    bot.send_message(message.chat.id, help_msg_main)
 
 
 @bot.message_handler(commands=["lar"])
@@ -61,7 +61,7 @@ def is_admin(message):
     return True
 
 
-help_msg = """
+help_msg_game = """
 Игра создана!
 
 ВАЖНО:
@@ -90,7 +90,7 @@ help_msg = """
 @bot.message_handler(commands=["game_help"])
 @validate_chats(allowed_chats)
 def help_eki_game(message):
-    bot.send_message(message.chat.id, help_msg % bot.get_me().username)
+    bot.send_message(message.chat.id, help_msg_game % bot.get_me().username)
 
 
 @bot.message_handler(commands=["game"])
