@@ -8,11 +8,13 @@ from dotenv import load_dotenv
 from parse_text_reactions import find_answer_on_text_msg, on_lar_command
 from utils import validate_chats
 
-logging.basicConfig(filename="bot.log", level=logging.INFO)
+load_dotenv()
+log_path = os.path.join(os.environ.get("LOG_PATH", ""), "bot.log")
+logging.basicConfig(filename=log_path, level=logging.INFO)
 
 log = logging.getLogger(__name__)
 
-load_dotenv()
+
 token = os.environ.get("TELE_TOKEN")
 log.info("Get token")
 if not token:
