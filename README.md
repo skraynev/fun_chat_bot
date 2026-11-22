@@ -7,11 +7,16 @@ Chat bot with some functionality:
 - support for eki game
 
 # Code validations
+
+### Install dependencies
+`curl -LsSf https://astral.sh/uv/install.sh | sh`
+
 ### Lint
 `make lint`
 
 ### Tests
 `make tests`
+
 
 # Build image
 `make build`

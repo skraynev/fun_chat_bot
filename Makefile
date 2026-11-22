@@ -1,9 +1,9 @@
 lint:
-	black .
-	flake8 .
+	uv run black .
+	uv run flake8 chat_bot/*
 
 test:
-	pytest tests/*
+	uv run pytest tests/*
 
 build:
 	docker build -f docker/Dockerfile -t skraynev/chat_bot .
